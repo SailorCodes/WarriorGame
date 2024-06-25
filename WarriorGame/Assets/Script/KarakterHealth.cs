@@ -13,10 +13,13 @@ public class KarakterHealth : MonoBehaviour
     public bool enemyattack;
     public float enemytimer;
 
+    public Animator anim;
+
     void Start()
     {
         currentHealth = maxHealth;
         enemytimer = 1.5f;
+        anim = GetComponent<Animator>();
     }
     //Düþmanýn bize zarar verme aralýðý
     void EnemyAttackSpacing()
@@ -52,8 +55,16 @@ public class KarakterHealth : MonoBehaviour
         {
             currentHealth -= 20;
             enemyattack = false;
+            anim.SetTrigger("isHurt");
         }
         healthBar.SetHealth(currentHealth);
+
+        if (currentHealth<=0) 
+        {
+            currentHealth = 0;
+            Die();
+        }
+
     }
 
     void Update()
@@ -66,4 +77,13 @@ public class KarakterHealth : MonoBehaviour
             TakeDamage(20);
         }
     }
+    void Die() 
+    {
+        anim.SetBool("isDead", true);
+        GetComponent<KarakterMove>().enabled = false;
+
+        Destroy(gameObject, 2f);
+    }
+
+
 }
